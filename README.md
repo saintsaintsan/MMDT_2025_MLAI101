@@ -1,51 +1,38 @@
 # MMDT_2025_MLAI101
 
-# Submission Guidelines: Using GitHub Branches
+# Gradient Descent: An Essential Algorithm in Data Science
 
-To ensure smooth and organized submissions, all students must submit their homework via **one shared GitHub repository**. Each student will create their own **branch** for submission. Please follow the instructions below to properly submit your work.
+Gradient Descent is a core optimization algorithm used to minimize a function, typically called a "Cost Function" or "Loss Function." This function measures how much error your machine learning model has. The goal is to find the set of model parameters that makes this error as small as possible.
 
-## Steps for Submission
+It's a foundational algorithm used to train many machine learning models like Linear Regression, Logistic Regression, and Neural Networks.
 
-### 1. Fork the Shared Repository
-- Go to the shared GitHub repository [https://github.com/Myanmar-Data-Tech/MMDT_2025_MLAI101](MLAI_batch01).
-- Click the **“Fork”** button at the top-right corner to create a personal copy of the repository.
+## How It Works
+Imagine you're trying to find the lowest point in a valley. Gradient Descent works like this:
 
-### 2. Clone Your Forked Repository
-Once you've forked the repository, clone it to your local machine:
-```bash
-git clone https://github.com/YOUR_USERNAME/MMDT_2025_MLAI101.git
-```
+Start Somewhere: You begin at any random spot on the "hill." (These are your model's starting values).
+Find the Downhill Path: From where you are, figure out which direction is the steepest way down. (This "downhill path" is called the "gradient.")
+Take a Step: You take a step down that path. How big is your step? That's controlled by the "Learning Rate."
+A small Learning Rate means tiny steps; it's slow.
+A large Learning Rate means big steps; it might be fast but could jump over the lowest point.
+Repeat: You keep repeating steps 2 and 3, taking one step at a time, until you gradually reach the very bottom of the valley (the point of minimum error).
+In Simple Terms:
+New Value = Current Value - (Learning Rate * Downhill Direction)
 
-### 3. Create a Branch for Your Submission
-Create a new branch using your **name** to clearly identify your submission:
-```bash
-git checkout -b yourname
-```
-> Example: `git checkout -b alex-chen`
+## Types of Gradient Descent
 
-### 4. Add Your Work
-- Complete the homework locally (e.g., `<Mid-Term>_Project.ipynb`).
-- Put your completed notebook or code in a folder named `Mid-Term`.
-- Add your reflection report as `report.md` or `report.pdf` in the same folder.
+The main types differ by how much data they use to calculate the gradient at each step:
 
-### 5. Commit and Push Your Changes
-After adding your work, commit and push your changes to your branch:
-```bash
-git add .
-git commit -m "Completed MidTermProject and reflection"
-git push origin yourname
-```
+1.  **Batch Gradient Descent (BGD):**
+2.  **Stochastic Gradient Descent (SGD):**
+3.  **Mini-Batch Gradient Descent (MBGD):**
+   
+## Where Is It Used?
 
-### 6. Create a Pull Request
-- Go to your GitHub repository.
-- Click **“Compare & pull request”**.
-- Title the pull request as: `<Mid-term> Project Submission - Your Name`
-- Confirm your changes and submit the pull request to the **main repository**.
+Gradient Descent is widely used in:
+* Linear Regression
+* Logistic Regression
+* Neural Networks (the backpropagation algorithm is a form of gradient descent)
+* Any machine learning problem where you need to minimize a differentiable cost function to train a model.
 
-## Summary Checklist
-- [ ] Forked the repo
-- [ ] Created a personal branch (e.g., `yourname`)
-- [ ] Added all required files in the `[Yourname]/` folder
-- [ ] Wrote and included the reflection (≤300 words)
-- [ ] Committed & pushed changes
-- [ ] Opened a pull request to the main repository
+
+
