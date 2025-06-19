@@ -1,0 +1,8 @@
+This lab helped me understand Linear Regression in a clearer and more practical way. Before this, I only knew the theory, but working with real data made the concept easier to understand.
+
+I learned how important it is to prepare the data properly before building a model. For example, I saw how normalizing the data and choosing the right features can make a big difference in prediction accuracy. I also found out how useful error metrics like MAE and RMSE are in checking whether the model is doing a good job.
+
+Using tools like scikit-learn and matplotlib gave me more confidence in applying machine learning with Python. I also learned that even a simple model like Linear Regression can be very powerful when used correctly.
+
+Overall, this lab made me more interested in learning about machine learning. It showed me how models can be built step by step and how they can be used to solve real problems.
+
