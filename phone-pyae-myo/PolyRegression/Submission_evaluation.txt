@@ -1,0 +1,45 @@
+a) Multiple Linear Regression gives the better performance.
+Evidence and Reasoning:
+- R-squared Comparison: Multiple Linear Regression achieves 50.7% variance explanation vs. essentially 0% for the polynomial model
+- Feature Richness: Multiple Linear Regression uses two meaningful features (bedrooms + sqft_living), while polynomial regression only uses one feature
+- Overfitting in Polynomial: The degree 5 polynomial shows signs of severe overfitting on the small dataset (50 samples)
+- Data Size: Multiple Linear Regression uses the full dataset, providing more robust estimates
+
+Why Multiple Linear Regression Performs Better:
+- More informative features: Both bedrooms and sqft_living provide independent predictive power
+- Appropriate model complexity: Linear relationships are often sufficient for house price prediction
+- Better generalization: Less prone to overfitting compared to high-degree polynomials
+
+b) Methodology Used:
+1. Cross-Validation Testing: Tested polynomial degrees from 1 to 10 using 5-fold cross-validation (Got the result of Degree 1 for the optimal value)
+2. Multiple Metrics: Evaluated both R² score and Mean Squared Error (MSE)
+3. Training vs Validation: Compared training and validation performance to detect overfitting
+
+Criteria for Optimal Degree:
+- Highest Validation R²: The degree that maximizes cross-validation R² score
+- Stable Performance: Minimal gap between training and validation scores
+- Balance: Good performance without excessive complexity
+
+Risks of Polynomial Degree Selection:
+Too Low Degree (Underfitting):
+- Symptoms: Poor performance on both training and validation sets
+- Problems: 
+  - Cannot capture underlying patterns in data
+  - High bias, low variance
+  - Oversimplified model
+- Result: Poor predictions, low R²
+
+Too High Degree (Overfitting):
+- Symptoms: Excellent training performance but poor validation performance
+- Problems:
+  - Model memorizes training data instead of learning patterns
+  - High variance, low bias
+  - Poor generalization to new data
+  - Unstable predictions
+- Result: Large gap between training and validation performance
+
+Best Practice:
+- Use cross-validation to get realistic performance estimates
+- Choose the degree that maximizes validation performance
+- Monitor the training-validation gap to avoid overfitting
+- Consider computational complexity vs. performance gains
