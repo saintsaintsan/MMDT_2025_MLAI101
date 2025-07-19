@@ -1,10 +1,10 @@
 # Body Fat Prediction Using Polynomial Regression
 
 **Why I chose this topic**
-To be honest, I didn't specifically set out to predict body fat from the beginning. I was looking for a dataset that would be suitable for polynomial regression, and after browsing through Kaggle, I came across this body fat prediction dataset. It seemed like a perfect fit because it had multiple numerical features that could potentially have non-linear relationships with the target variable (body fat percentage).
+I chose the Body Fat Percentage Prediction project because it provides an opportunity to explore how various physiological and anthropometric features relate to body fat percentage. This topic is both practical and relevant, especially in health, fitness, and medical fields where body composition assessment is crucial. This project seemed like a perfect fit because it had multiple numerical features that could potentially have non-linear relationships with the target variable (body fat percentage).
 
 **Dataset and approach**
-I used a body fat dataset from Kaggle that had 252 people with various body measurements. What I liked about it was that it was already clean with no missing data, which saved me time. I was initially about to use only the four features but I had to take all of the listed measurements to predict body fat percentage because I found out that taking all of these features would give me a really accurate model.
+I used a body fat dataset from Kaggle that had 252 people with various body measurements. What I liked about it was that it was already clean with no missing data. I was initially about to use only the four features but I had to take all of the listed measurements to predict body fat percentage because later I found out that taking all of these features would give me a really accurate model.
 
 **How I built the model**
 I set up a pipeline that first scaled all the data, then transformed it into polynomial features, and finally train the data. Instead of just guessing what polynomial degree to use, I used GridSearchCV to test degrees from 2 to 9. It turned out that degree 2 worked best. I split my data 70-30 for training and testing.
