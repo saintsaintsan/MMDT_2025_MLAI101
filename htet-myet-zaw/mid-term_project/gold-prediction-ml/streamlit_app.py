@@ -202,7 +202,7 @@ def main():
     feature_names = model_data['feature_names']
     
     # Create tabs
-    tab1, tab2, tab3, tab4 = st.tabs(["Single Prediction", "Time Series Prediction", "Batch Prediction", "Data Visualizations"])
+    tab1, tab2, tab3 = st.tabs(["Single Prediction", "Time Series Prediction", "Data Visualizations"])
     
     with tab1:
         st.header("Single Gold Price Prediction")
@@ -248,12 +248,17 @@ def main():
                 
                 # Main prediction
                 col1, col2, col3 = st.columns([1, 2, 1])
-                with col2:
-                    st.metric(
-                        label="Predicted Gold Price",
-                        value=f"${prediction:,.2f}",
-                        delta=None
-                    )
+                with col1:
+                    st.markdown(f"""
+                        <div style='font-size: 3.8em; font-weight: bold; color: #ed9e3e; margin-bottom: 0.5em'>
+                            ${prediction:,.2f}
+                        </div>                        
+                    """, unsafe_allow_html=True)
+                    # st.metric(
+                    #     label="Predicted Gold Price",
+                    #     value=f"${prediction:,.2f}",
+                    #     delta=None
+                    # )
                 
                 # Confidence interval
                 st.markdown("**Confidence Interval:**")
@@ -281,36 +286,19 @@ def main():
                 with col3:
                     st.metric("Model Type", "Ridge Regression")
                 
-                # Feature importance
-                st.markdown("**Top 5 Feature Impacts:**")
-                coefs = model.coef_
-                feature_impact = pd.DataFrame({
-                    'Feature': feature_names,
-                    'Coefficient': coefs,
-                    'Value': feature_df.iloc[0].values,
-                    'Impact': coefs * feature_df.iloc[0].values
-                })
-                feature_impact = feature_impact.sort_values('Impact', key=abs, ascending=False)
-                
-                # Display top 5 features
-                top_features = feature_impact.head(5)
-                for idx, row in top_features.iterrows():
-                    impact_color = "🟢" if row['Impact'] > 0 else "🔴"
-                    st.write(f"{impact_color} **{row['Feature']}**: ${row['Impact']:,.0f}")
-                
                 # Simple insights
                 st.markdown("**Analysis:**")
                 if prediction > 2000:
-                    st.write("• High gold price prediction suggests strong market conditions")
+                    st.write("High gold price prediction suggests strong market conditions")
                 elif prediction > 1500:
-                    st.write("• Moderate gold price prediction indicates stable market")
+                    st.write("Moderate gold price prediction indicates stable market")
                 else:
-                    st.write("• Lower gold price prediction suggests weaker market")
+                    st.write("Lower gold price prediction suggests weaker market")
                 
                 if abs(upper_bound - lower_bound) > 200:
-                    st.write("• Wide confidence interval indicates high market uncertainty")
+                    st.write("Wide confidence interval indicates high market uncertainty")
                 else:
-                    st.write("• Narrow confidence interval suggests stable prediction")
+                    st.write("Narrow confidence interval suggests stable prediction")
                 
                 # Disclaimer
                 st.markdown("---")
@@ -330,17 +318,6 @@ def main():
                 return None
         
         predictor = get_time_series_predictor()
-        
-        # # Add option to refit models if needed
-        # with st.expander("🔧 Advanced Options"):
-            # if st.button("🔄 Refit Time Series Models"):
-            #     with st.spinner("Refitting ARIMA models..."):
-            #         try:
-            #             predictor.force_refit_models()
-            #             st.success("✅ Models refitted successfully!")
-            #             st.rerun()
-            #         except Exception as e:
-            #             st.error(f"❌ Error refitting models: {e}")
         
         if predictor is None:
             st.error("Could not initialize time series predictor. Please check your data files.")
@@ -441,6 +418,9 @@ def main():
                     # Create a formatted results table
                     display_results = results.copy()
                     display_results.index = display_results.index.strftime('%Y-%m-%d')
+                    # Remove 'Gold Price' column if present
+                    if 'Gold_Price' in display_results.columns:
+                        display_results = display_results.drop(columns=['Gold_Price'])
                     display_results.columns = [col.replace('_', ' ').title() for col in display_results.columns]
                     
                     # Format numbers
@@ -467,25 +447,12 @@ def main():
                     # Create interactive plot with Plotly
                     fig = go.Figure()
                     
-                    # Historical gold prices
-                    historical_data = load_data_for_viz()
-                    if historical_data is not None:
-                        fig.add_trace(go.Scatter(
-                            x=historical_data['Date'],
-                            y=historical_data['Gold_Price'],
-                            mode='lines',
-                            name='Historical Gold Price',
-                            line=dict(color='blue', width=2),
-                            hovertemplate='<b>Date:</b> %{x}<br><b>Gold Price:</b> $%{y:,.2f}<extra></extra>'
-                        ))
-                    
-                    # Predicted gold prices
                     fig.add_trace(go.Scatter(
                         x=results.index,
                         y=results['Gold_Price_Predicted'],
                         mode='lines+markers',
                         name='Predicted Gold Price',
-                        line=dict(color='red', width=2, dash='dash'),
+                        line=dict(color='gold', width=2, dash='dash'),
                         marker=dict(size=6),
                         hovertemplate='<b>Date:</b> %{x}<br><b>Predicted Gold Price:</b> $%{y:,.2f}<extra></extra>'
                     ))
@@ -579,11 +546,11 @@ def main():
                         usd_trend = results['USD_Index'].iloc[-1] - results['USD_Index'].iloc[0]
                         
                         if cpi_trend > 0:
-                            st.write("• 📊 CPI: Rising inflation (bullish for gold)")
+                            st.write("• 📊 CPI: Rising inflation (gold price going up)")
                         if oil_trend > 0:
-                            st.write("• 🛢️ Oil: Rising energy costs (bullish for gold)")
+                            st.write("• 🛢️ Oil: Rising energy costs (gold price going up)")
                         if usd_trend < 0:
-                            st.write("• 💵 USD: Weakening dollar (bullish for gold)")
+                            st.write("• 💵 USD: Weakening dollar (gold price going up)")
                     
                     with col2:
                         st.markdown("**Market Sentiment:**")
@@ -613,57 +580,6 @@ def main():
                 st.info("💡 Try reducing the prediction period or check if all required data is available.")
     
     with tab3:
-        st.header("Batch Prediction")
-        st.markdown("Upload a CSV file with economic indicators for batch predictions")
-        
-        uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
-        
-        if uploaded_file is not None:
-            try:
-                df = pd.read_csv(uploaded_file)
-                st.write("Preview of uploaded data:")
-                st.dataframe(df.head())
-                
-                if st.button("📊 Make Batch Predictions"):
-                    with st.spinner("Processing batch predictions..."):
-                        predictions = []
-                        
-                        for idx, row in df.iterrows():
-                            # Extract features (assuming column names match)
-                            cpi = row.get('CPIAUCSL', 300.0)
-                            brent_oil = row.get('Brent_Oil', 80.0)
-                            usd_index = row.get('USD_Index', 100.0)
-                            sp500 = row.get('SP500', 4000.0)
-                            
-                            # Create features
-                            features = create_features(cpi, brent_oil, usd_index, sp500)
-                            feature_df = pd.DataFrame([features])
-                            feature_df = feature_df[feature_names]
-                            
-                            # Scale and predict
-                            features_scaled = scaler.transform(feature_df)
-                            pred = model.predict(features_scaled)[0]
-                            predictions.append(pred)
-                        
-                        # Add predictions to dataframe
-                        df['Predicted_Gold_Price'] = predictions
-                        
-                        st.success(f"✅ Completed {len(predictions)} predictions!")
-                        st.dataframe(df)
-                        
-                        # Download button
-                        csv = df.to_csv(index=False)
-                        st.download_button(
-                            label="📥 Download Predictions",
-                            data=csv,
-                            file_name="gold_predictions.csv",
-                            mime="text/csv"
-                        )
-                        
-            except Exception as e:
-                st.error(f"Error processing file: {e}")
-    
-    with tab4:
         st.header("Data Visualizations")
         st.markdown("Explore the relationships between economic indicators and gold prices")
         
